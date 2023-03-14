@@ -15,7 +15,7 @@ const Code = ({value, onChange, height, fontSize}: CodeProps) => {
   return (
     <CodeMirror 
       value={value}
-      height={`${height}px`}
+      height={`${height}rem`}
       theme={aura}
       extensions={[javascript({ jsx: true })]}
       onChange={onChange}
