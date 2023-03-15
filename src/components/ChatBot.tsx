@@ -3,21 +3,22 @@ import styles from "./ChatBot.module.css";
 
 interface ChatMessage {
   id: number,
-  content: string,
-  author: string
+  author: string,
+  content: string
 }
 
 const ChatBot = () => {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
-  const chatBoxRef = useRef<HTMLInputElement>(null);
+  const chatBoxRef = useRef<HTMLTextAreaElement>(null);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter") {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
       if (chatBoxRef.current && chatBoxRef.current.value.trim() != "") {        
         const newMessage: ChatMessage = {
           id: messages.length,
-          content: chatBoxRef.current.value,
-          author: "You"
+          author: "You",
+          content: chatBoxRef.current.value
         };
 
         chatBoxRef.current.value = '';
@@ -38,12 +39,13 @@ const ChatBot = () => {
           </li>
         )}
       </ul>
-      <input 
-        type="text"
-        ref={chatBoxRef}
-        onKeyDown={handleKeyDown}
+      <textarea
         className={styles.ChatBox}
-      />
+        onKeyDown={handleKeyDown}
+        rows={5}
+        placeholder="Enter prompt here"
+        ref={chatBoxRef}
+      ></textarea>
     </div>
   );
 }
