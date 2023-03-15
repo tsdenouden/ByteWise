@@ -8,6 +8,11 @@
   height: 100%;
 }
 
+.ChatMessageListContainer {
+  overflow: auto;
+  height: 100%;
+}
+
 .ChatMessageList {
   list-style-type: none;
   margin: 0;
