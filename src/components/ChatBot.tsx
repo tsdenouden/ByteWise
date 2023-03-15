@@ -23,7 +23,6 @@ const ChatBot = () => {
     }
   }, [messages]);
 
-
   // If the Enter key is pressed (without Shift) in the textarea, 
   // submits the message if it is not blank.
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -37,7 +36,6 @@ const ChatBot = () => {
           content: chatBoxRef.current.value
         };
 
-        // clear textarea
         chatBoxRef.current.value = '';
         chatBoxRef.current.focus();
         
