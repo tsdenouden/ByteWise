@@ -10,14 +10,14 @@ interface ChatMessage {
 const ChatBot = () => {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
 
-  // Ref for the container element that holds the chat message list
+  // Ref for the container element that holds the list of chat messages
   const messagesContainerRef = useRef<HTMLDivElement>(null);
 
   // Textarea for prompting
   const chatBoxRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
-    // scroll to latest message
+    // scroll to latest message (when messages state updates)
     if (messagesContainerRef.current) {
       messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
     }
