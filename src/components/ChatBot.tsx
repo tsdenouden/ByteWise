@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import Prompt from "../PromptAI";
+import Prompt from "../services/PromptAI";
 import styles from "./ChatBot.module.css";
 
 interface ChatMessage {
