@@ -1,45 +1,60 @@
 import { useState, useRef, useEffect } from "react";
+import Prompt from "../PromptAI";
 import styles from "./ChatBot.module.css";
 
 interface ChatMessage {
-  id: number,
-  author: string,
-  content: string
+  role: string,
+  content: string,
 }
 
-const ChatBot = () => {
+const ChatBot = ({code}: {code:string}) => {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
 
-  // Ref for the container element that holds the list of chat messages
-  const messagesContainerRef = useRef<HTMLDivElement>(null);
+  // Used to prevent user from spamming prompts
+  // Chatbox gets disabled after sending a prompt, and re-enabled when AI responds
+  const [isTextAreaDisabled, setTextAreaDisabled] = useState<boolean>(false);
 
-  // Textarea for prompting
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
   const chatBoxRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
-    // scroll to latest message (when messages state updates)
+    // scroll to latest message
     if (messagesContainerRef.current) {
       messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
     }
+
+    if (messages.length >= 1) {
+      // If last message was sent by the User,
+      // request the AI to respond.
+      let lastMessage = messages[messages.length-1];
+      if (lastMessage.role === "user") {
+        Prompt(messages, code)
+          .then(res => {
+            const newAssistantMessage: ChatMessage = {
+              role: "assistant",
+              content: res.choices[0].message.content
+            }
+            setMessages(messages.concat(newAssistantMessage))
+            setTextAreaDisabled(false);
+          })
+      }
+    }
   }, [messages]);
 
-  // If the Enter key is pressed (without Shift) in the textarea, 
-  // submits the message if it is not blank.
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && !e.shiftKey) {
-      // prevent newline
       e.preventDefault();
       if (chatBoxRef.current && chatBoxRef.current.value.trim() !== "") {        
         const newMessage: ChatMessage = {
-          id: messages.length,
-          author: "You",
-          content: chatBoxRef.current.value
+          role: "user",
+          content: chatBoxRef.current.value,
         };
 
         chatBoxRef.current.value = '';
         chatBoxRef.current.focus();
-        
+
         setMessages(messages.concat(newMessage));
+        setTextAreaDisabled(true);
       }
     }
   }
@@ -51,9 +66,12 @@ const ChatBot = () => {
         ref={messagesContainerRef}
       >
         <ul className={styles.ChatMessageList}>
-          {messages.map(message => 
-            <li className={styles.ChatMessage} key={message.id}>
-              <strong>{message.author}</strong>
+          {messages.map((message, index) => 
+            <li 
+              className={message.role === "user" ? styles.UserMessage : styles.GPTMessage} 
+              key={index}
+            >
+              <strong>{message.role}</strong>
               <p>{message.content}</p>
             </li>
           )}
@@ -62,7 +80,8 @@ const ChatBot = () => {
       <textarea
         onKeyDown={handleKeyDown}
         rows={5}
-        placeholder="Enter prompt here"
+        placeholder={isTextAreaDisabled ? "Waiting for assistant..." : "Enter prompt here..."}
+        disabled={isTextAreaDisabled}
         className={styles.ChatBox}
         ref={chatBoxRef}
       ></textarea>

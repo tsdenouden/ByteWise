@@ -19,7 +19,9 @@ function App() {
       </h2> */}
       <div className={styles.editorContainer}>
         <div className={styles.chatContainer}>
-          <ChatBot />
+          <ChatBot 
+            code={code}
+          />
         </div>
         <div className={styles.textEditor}>
           <Code 
