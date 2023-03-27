@@ -4,16 +4,15 @@ import { aura } from "@uiw/codemirror-theme-aura";
 import styles from "./Code.module.css";
 
 interface CodeProps {
-  value: string,
-  onChange: React.Dispatch<React.SetStateAction<string>>,
-  height: number,
-  fontSize: number
+  value: string;
+  onChange: React.Dispatch<React.SetStateAction<string>>;
+  height: number;
+  fontSize: number;
 }
 
-const Code = ({value, onChange, height, fontSize}: CodeProps) => {
-
+const Code = ({ value, onChange, height, fontSize }: CodeProps) => {
   return (
-    <CodeMirror 
+    <CodeMirror
       value={value}
       height={`${height}rem`}
       theme={aura}
@@ -22,6 +21,6 @@ const Code = ({value, onChange, height, fontSize}: CodeProps) => {
       style={{ fontSize: `${fontSize}px` }}
     />
   );
-}
+};
 
 export default Code;
