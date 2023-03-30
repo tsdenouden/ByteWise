@@ -2,13 +2,13 @@ import { useEffect, useState } from "react";
 import ProjectTemplate from "../utils/ProjectTemplate";
 import styles from "./Preview.module.css";
 
-const Preview = ({
-  srcDoc,
-  delayRenderInterval,
-}: {
+interface PreviewProps {
   srcDoc: string;
   delayRenderInterval: number;
-}) => {
+  onError?: (error: string) => void;
+}
+
+const Preview = ({srcDoc, delayRenderInterval, onError}: PreviewProps) => {
   const [html, setHTML] = useState<string>("");
 
   useEffect(() => {
@@ -27,9 +27,12 @@ const Preview = ({
       // handle the message
       const data = e.data;
       if (data.message) {
-        console.log("Received message:", data);
-        // Render the error message to the user
+        // Render the error message in iframe
         setHTML(`${data.message}`);
+
+        if (onError) {
+          onError(data.message);
+        }
       }
     };
 

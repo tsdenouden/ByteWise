@@ -1,9 +1,6 @@
-const apiKey = import.meta.env.VITE_REACT_APP_GPT_API_KEY;
+import { ChatMessage } from "../types";
 
-interface ChatMessage {
-  role: string;
-  content: string;
-}
+const apiKey = import.meta.env.VITE_REACT_APP_GPT_API_KEY;
 
 const systemMessage = {
   role: "system",
@@ -25,13 +22,11 @@ const systemMessage = {
   `,
 };
 
-const Prompt = (messages: ChatMessage[], code: string) => {
+const Prompt = (messages: ChatMessage[], code?: string) => {
   // Send the code of the App to the AI as well
-  // (this message is hidden from the user)
-  const currentCode: ChatMessage = {
-    role: "user",
-    content: `Here is the complete code of the app: ${code}`,
-  };
+  if (code) {
+    systemMessage.content += `Here is the complete code of the app: ${code}`
+  }
   
   return fetch("https://api.openai.com/v1/chat/completions", {
     method: "POST",
@@ -41,7 +36,7 @@ const Prompt = (messages: ChatMessage[], code: string) => {
     },
     body: JSON.stringify({
       model: "gpt-3.5-turbo",
-      messages: [systemMessage, currentCode, ...messages],
+      messages: [systemMessage, ...messages],
       max_tokens: 200,
       n: 1,
       temperature: 0.5,

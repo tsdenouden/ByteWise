@@ -13,8 +13,8 @@ const ReactApp = (code: string): string => {
         border: 0px;
         margin: 0px;
         padding: 0px;
-        background-color: black;
-        background-image: url("https://media2.giphy.com/media/3o7bu3XilJ5BOiSGic/giphy.gif");
+        background-image: url("https://raw.githubusercontent.com/Codelessly/FlutterLoadingGIFs/master/packages/cupertino_activity_indicator.gif");
+        background-size: 30%;
         background-repeat: no-repeat; 
         background-position: center;
       }

@@ -1,22 +1,16 @@
 import { useState, useRef, useEffect } from "react";
 import MarkdownRenderer from "./MarkdownRenderer";
 import Prompt from "../services/PromptAI";
+import { ChatMessage } from "../types";
 import styles from "./ChatBot.module.css";
 
-interface ChatMessage {
-  role: "user" | "assistant";
-  content: string;
+interface ChatBotProps {
+  messages: ChatMessage[];
+  setMessages: React.Dispatch<React.SetStateAction<ChatMessage[]>>;
+  code?: string;
 }
 
-const ChatBot = ({ code }: { code: string }) => {
-  const [messages, setMessages] = useState<ChatMessage[]>([
-    {
-      role: "assistant",
-      content: `Hi there! I'm an AI chatbot designed to assist you with your web application.
-To get started, edit the code in the text editor or prompt me for further guidance.`,
-    },
-  ]);
-
+const ChatBot = ({ messages, setMessages, code }: ChatBotProps) => {
   // Used to prevent user from spamming prompts
   // Chatbox gets disabled after sending a prompt, and re-enabled when AI responds
   const [isTextAreaDisabled, setTextAreaDisabled] = useState<boolean>(false);
@@ -36,6 +30,10 @@ To get started, edit the code in the text editor or prompt me for further guidan
       // request the AI to respond
       let lastMessage = messages[messages.length - 1];
       if (lastMessage.role === "user") {
+        // Prevent user from sending another prompt
+        // until AI responds
+        setTextAreaDisabled(true);
+
         Prompt(messages, code).then((res) => {
           const newAssistantMessage: ChatMessage = {
             role: "assistant",
@@ -61,7 +59,6 @@ To get started, edit the code in the text editor or prompt me for further guidan
         chatBoxRef.current.focus();
 
         setMessages(messages.concat(newMessage));
-        setTextAreaDisabled(true);
       }
     }
   };
