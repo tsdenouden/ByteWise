@@ -13,6 +13,10 @@ const ReactApp = (code: string): string => {
         border: 0px;
         margin: 0px;
         padding: 0px;
+        background-color: black;
+        background-image: url("https://media2.giphy.com/media/3o7bu3XilJ5BOiSGic/giphy.gif");
+        background-repeat: no-repeat; 
+        background-position: center;
       }
       #app {
         width: 100%;
@@ -26,6 +30,21 @@ const ReactApp = (code: string): string => {
   </head>
   <body>
     <div id="app"></div>
+    <script>
+      window.onerror = function(message, source, lineno, colno, error) {
+        console.error('Error caught by global error handler:', message, source, lineno, colno, error);
+
+        // send an error message to parent iframe
+        window.parent.postMessage({
+          type: 'ERROR',
+          message: message,
+          source: source,
+          lineno: lineno,
+          colno: colno,
+          error: error.toString(),
+        }, '*');
+      };
+    </script>
     <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
