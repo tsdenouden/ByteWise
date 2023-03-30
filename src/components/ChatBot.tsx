@@ -21,17 +21,14 @@ const ChatBot = ({ messages, setMessages, code }: ChatBotProps) => {
   useEffect(() => {
     // scroll to latest message
     if (messagesContainerRef.current) {
-      messagesContainerRef.current.scrollTop =
-        messagesContainerRef.current.scrollHeight;
+      messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
     }
 
     if (messages.length >= 1) {
-      // If last message was sent by the User,
-      // request the AI to respond
+      // If the last message was sent by the user, request the AI to respond
       let lastMessage = messages[messages.length - 1];
       if (lastMessage.role === "user") {
-        // Prevent user from sending another prompt
-        // until AI responds
+        // Prevent user from sending another prompt until AI responds
         setTextAreaDisabled(true);
 
         Prompt(messages, code).then((res) => {
@@ -50,6 +47,7 @@ const ChatBot = ({ messages, setMessages, code }: ChatBotProps) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       if (chatBoxRef.current && chatBoxRef.current.value.trim() !== "") {
+        // Send new chat message
         const newMessage: ChatMessage = {
           role: "user",
           content: chatBoxRef.current.value,

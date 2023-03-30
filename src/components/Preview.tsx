@@ -49,9 +49,6 @@ const Preview = ({srcDoc, delayRenderInterval, onError}: PreviewProps) => {
       srcDoc={html}
       sandbox="allow-scripts"
       frameBorder="0"
-      onError={() => {
-        console.log("What's up");
-      }}
       className={styles.previewFrame}
     ></iframe>
   );
