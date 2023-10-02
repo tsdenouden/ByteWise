@@ -34,6 +34,8 @@ const ReactApp = (code: string): string => {
       window.onerror = function(message, source, lineno, colno, error) {
         console.error('Error caught by global error handler:', message, source, lineno, colno, error);
 
+        const errorString = error ? error.toString() : 'Unknown Error';
+
         // send an error message to parent iframe
         window.parent.postMessage({
           type: 'ERROR',
@@ -41,7 +43,7 @@ const ReactApp = (code: string): string => {
           source: source,
           lineno: lineno,
           colno: colno,
-          error: error.toString(),
+          error: errorString,
         }, '*');
       };
     </script>
