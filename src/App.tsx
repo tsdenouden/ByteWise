@@ -20,7 +20,7 @@ To get started, edit the code in the text editor or prompt me for further guidan
     },
   ]);
 
-  const [modalVisible, setModalVisible] = useState<boolean>(true);
+  const [modalVisible, setModalVisible] = useState<boolean>(false);
 
   const handleCodeChange = useCallback((value: React.SetStateAction<string>) => {
     setCode(value);
@@ -42,19 +42,6 @@ To get started, edit the code in the text editor or prompt me for further guidan
       setModalVisible(false);
     }
   }
-
-  // Copy source code to clipboard
-  const inputRef = useRef<HTMLInputElement | null>(null);;
-
-  const copyToClipboard = () => {
-    const input = inputRef.current;
-
-    if (input) {
-      input.value = ProjectTemplate.ReactApp(code);
-      input.select();
-      document.execCommand('copy');
-    }
-  };
 
   return (
     <main className={styles.App}>
@@ -98,12 +85,11 @@ To get started, edit the code in the text editor or prompt me for further guidan
 
        {/*Copy code to cipboard*/}
         <input 
-          ref={inputRef}
           style={{ position: 'absolute', left: '-9999px' }}
         ></input>
         <div 
           className={styles.buttonGreen}
-          onClick={copyToClipboard}
+          onClick={() => {navigator.clipboard.writeText(ProjectTemplate.ReactApp(code))}}
           style={{marginTop: "20px"}}
         >
           📋 Copy Code 
